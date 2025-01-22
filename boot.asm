@@ -3,19 +3,31 @@
 
 start:
     mov si, msg
+    call print__string
 
+main_loop:
+    call get_key
+    mov ah, 0x0E
+    int 0x10
+    jmp main_loop
+    
 print__string:
     lodsb
     or al, al
-    jz done
+    jz return
     mov ah, 0x0E
     int 0x10
     jmp print__string
 
-done:
-    cli
-    hlt
+get_key:
+    xor ah, ah
+    int 0x16
+    ret
 
-msg db 'Hello,this sky os!', 0
+return:
+    ret
+
+msg db 'Welcome to SKY-OS: $>', 0
+
 times 510-($-$$) db 0
 dw 0xAA55
